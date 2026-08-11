@@ -41,3 +41,6 @@ install the Android SDK & NDK, clone this repo recursively, and then run
 ```
 
 This will generate the apks in `app/build/outputs/apk/`.
+
+---
+*Disclaimer: I take neither credit nor responsibility for the original work or for the modifications made.*
