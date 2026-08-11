@@ -4,12 +4,12 @@ cross-platform Game Boy and Game Boy Color emulator written in C with a focus
 on accuracy. See the [main repository](https://github.com/philj56/gbcc) for
 details.
 
-## New Features (Vide-coded)
+## Fork New Features (Vide-coded)
 This fork includes several improvements and new features implemented via AI assistance (vide-coded):
 
 ### Camera and Sensors
 - **CameraX Integration**: Full migration and implementation of CameraX APIs for modern and performant camera management.
-- **Rapid Sensor Switching**: Added a touch button to cycle through all available smartphone cameras (front, back, wide-angle, macro, etc.) directly during emulation.
+- **Rapid Sensor Switching**: Added a touch button to cycle between front and back cameras directly during emulation.
 - **A + Photo Combo Button**: A new dedicated button that emulates the Game Boy 'A' key while simultaneously capturing a high-resolution photo with the smartphone sensor.
 
 ### Printer
