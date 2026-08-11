@@ -43,4 +43,4 @@ actions tab (you'll need to be logged in to GitHub to do this). Select the lates
 succeeded, and look for the artifacts dropdown.~~
 
 ---
-## *Disclaimer: I take neither credit nor responsibility for the original work or for the modifications made.*
+## *Disclaimer: These modifications were made for my own personal use. I take neither credit nor responsibility for the original work or for the modifications made, and they are provided as-is.*
