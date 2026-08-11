@@ -4,6 +4,8 @@ cross-platform Game Boy and Game Boy Color emulator written in C with a focus
 on accuracy. See the [main repository](https://github.com/philj56/gbcc) for
 details.
 
+---
+
 ## Fork New Features (Vide-coded)
 This fork includes several improvements and new features implemented via AI assistance (vide-coded):
 
@@ -22,6 +24,8 @@ This fork includes several improvements and new features implemented via AI assi
     - Full integration of the new Camera buttons into the "Rearrange layout" feature, with drag-and-drop support and resizing via a dedicated slider.
     - Dynamic UI adaptation: the A + Photo button automatically turns blue when using Red or Berry skins to ensure visibility.
 - **Layout Optimizations**: Added ScrollView to the layout customization screen and fixed various icon and slider overlap issues.
+
+---
 
 ## Install
 ### From source
@@ -43,4 +47,6 @@ actions tab (you'll need to be logged in to GitHub to do this). Select the lates
 succeeded, and look for the artifacts dropdown.~~
 
 ---
-## *Disclaimer: These modifications were made for my own personal use. I take neither credit nor responsibility for the original work or for the modifications made, and they are provided as-is.*
+
+> [!CAUTION]
+> **Disclaimer**: These modifications were made for my own personal use. Since this fork was **"vibe-coded"** with AI assistance, I have no precise idea of the actual quality or reliability of the work. I take neither credit nor responsibility for the original work or for the modifications made, and they are provided **strictly as-is**. Accordingly, **no support will be provided**.
