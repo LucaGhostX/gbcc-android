@@ -4,13 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
-import com.philj56.gbcc.R
+import androidx.appcompat.widget.AppCompatTextView
 import kotlin.math.roundToInt
 
-class ResizableImage : AppCompatImageView {
+class ResizableText : AppCompatTextView {
     var gridSize = 0
     var gridBase = 0
     private var floating: Boolean = false
@@ -49,20 +46,6 @@ class ResizableImage : AppCompatImageView {
                 view.y = y - view.height / 2
             }
 
-            val parent = view.parent as? ViewGroup
-            val label = when(view.id) {
-                R.id.buttonA -> parent?.findViewById<View>(R.id.labelA)
-                R.id.buttonB -> parent?.findViewById<View>(R.id.labelB)
-                R.id.buttonStart -> parent?.findViewById<View>(R.id.labelStart)
-                R.id.buttonSelect -> parent?.findViewById<View>(R.id.labelSelect)
-                else -> null
-            }
-
-            label?.let {
-                it.x = view.x + (view.width - it.width) / 2
-                it.y = view.y + (view.height - it.height) / 2
-            }
-
             return@OnTouchListener true
         })
     }
@@ -75,4 +58,3 @@ class ResizableImage : AppCompatImageView {
         })
     }
 }
-

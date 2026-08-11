@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="400dp"
+    android:viewportWidth="240"
+    android:viewportHeight="400">
+    <!-- CPU Chip -->
+    <path
+        android:fillColor="#30000000"
+        android:pathData="M80,80h80v60h-80z" />
+    <path
+        android:fillColor="#40FFFFFF"
+        android:pathData="M90,90h60v1h-60z M90,100h60v1h-60z M90,110h60v1h-60z" />
+
+    <!-- Speaker area -->
+    <path
+        android:fillColor="#15000000"
+        android:pathData="M180,340m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0" />
+    <!-- Speaker holes -->
+    <path android:fillColor="#30000000" android:pathData="M170,320a4,4 0,1 1,-8 0a4,4 0,1 1,8 0z M185,320a4,4 0,1 1,-8 0a4,4 0,1 1,8 0z M177,335a4,4 0,1 1,-8 0a4,4 0,1 1,8 0z M192,335a4,4 0,1 1,-8 0a4,4 0,1 1,8 0z M170,350a4,4 0,1 1,-8 0a4,4 0,1 1,8 0z M185,350a4,4 0,1 1,-8 0a4,4 0,1 1,8 0z" />
+
+    <!-- Circuit Traces -->
+    <path
+        android:strokeColor="#20000000"
+        android:strokeWidth="2"
+        android:pathData="M120,140v40 M100,140v20 M140,140v30 M40,80h30 M40,100h30 M40,120h30" />
+
+    <!-- Capacitor shapes -->
+    <path android:fillColor="#20000000" android:pathData="M40,40m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+    <path android:fillColor="#20000000" android:pathData="M200,40m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+</vector>

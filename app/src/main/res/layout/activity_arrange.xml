@@ -83,12 +83,29 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/a_button_description"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_button_ab"
+        android:src="@drawable/ic_button_ab_selector"
         app:layout_constraintBottom_toBottomOf="@+id/dpad"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintTop_toTopOf="@+id/dpad"
         app:layout_constraintVertical_bias="0.33" />
+
+    <TextView
+        android:id="@+id/labelA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="A"
+        android:textColor="#80FFFFFF"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:importantForAccessibility="no"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintTop_toTopOf="@id/buttonA"
+        app:layout_constraintBottom_toBottomOf="@id/buttonA"
+        app:layout_constraintStart_toStartOf="@id/buttonA"
+        app:layout_constraintEnd_toEndOf="@id/buttonA" />
 
     <com.philj56.gbcc.arrange.ResizableImage
         android:id="@+id/buttonB"
@@ -101,13 +118,30 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/b_button_description"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_button_ab"
+        android:src="@drawable/ic_button_ab_selector"
         app:layout_constraintBottom_toBottomOf="@+id/buttonA"
         app:layout_constraintEnd_toStartOf="@+id/buttonA"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/dpad"
         app:layout_constraintTop_toTopOf="@+id/buttonA"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/labelB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="B"
+        android:textColor="#80FFFFFF"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:importantForAccessibility="no"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintTop_toTopOf="@id/buttonB"
+        app:layout_constraintBottom_toBottomOf="@id/buttonB"
+        app:layout_constraintStart_toStartOf="@id/buttonB"
+        app:layout_constraintEnd_toEndOf="@id/buttonB" />
 
     <com.philj56.gbcc.arrange.ResizableImage
         android:id="@+id/buttonStart"
@@ -118,12 +152,29 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/start_button_description"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_button_startselect"
+        android:src="@drawable/ic_button_start_selector"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/buttonSelect"
         app:layout_constraintTop_toTopOf="@+id/buttonSelect" />
+
+    <TextView
+        android:id="@+id/labelStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="START"
+        android:textColor="#80FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:importantForAccessibility="no"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintTop_toTopOf="@id/buttonStart"
+        app:layout_constraintBottom_toBottomOf="@id/buttonStart"
+        app:layout_constraintStart_toStartOf="@id/buttonStart"
+        app:layout_constraintEnd_toEndOf="@id/buttonStart" />
 
     <com.philj56.gbcc.arrange.ResizableImage
         android:id="@+id/buttonSelect"
@@ -135,12 +186,29 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/select_button_description"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_button_startselect"
+        android:src="@drawable/ic_button_select_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonStart"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/labelSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        android:textColor="#80FFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:importantForAccessibility="no"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintTop_toTopOf="@id/buttonSelect"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSelect"
+        app:layout_constraintStart_toStartOf="@id/buttonSelect"
+        app:layout_constraintEnd_toEndOf="@id/buttonSelect" />
 
     <include
         android:id="@+id/dpad"
@@ -166,6 +234,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/screenBorderBottom"
         layout="@layout/switch_turbo_resizable"/>
+
+    <com.philj56.gbcc.arrange.ResizableImage
+        android:id="@+id/buttonCameraSwitch"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/camera_switch_description"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/turboToggleLayout"
+        app:layout_constraintEnd_toStartOf="@+id/turboToggleLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/turboToggleLayout"
+        app:srcCompat="@drawable/ic_button_camera_switch_selector" />
+
+    <com.philj56.gbcc.arrange.ResizableImage
+        android:id="@+id/buttonAPhoto"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/a_photo_button_description"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/buttonA"
+        app:layout_constraintEnd_toEndOf="@+id/buttonA"
+        app:srcCompat="@drawable/ic_button_a_photo_selector" />
 
     <ImageView
         android:id="@+id/topRightCorner"
@@ -218,7 +310,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="@string/reset_sizes"
-        app:layout_constraintBottom_toBottomOf="@+id/sizeMenu"
+        app:layout_constraintTop_toBottomOf="@+id/sizeMenu"
         app:layout_constraintEnd_toStartOf="@+id/resetLayout"
         app:layout_constraintStart_toStartOf="@+id/sizeMenu" />
 
@@ -228,7 +320,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="@string/reset_layout"
-        app:layout_constraintBottom_toBottomOf="@+id/sizeMenu"
+        app:layout_constraintTop_toBottomOf="@+id/sizeMenu"
         app:layout_constraintEnd_toEndOf="@+id/sizeMenu"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/resetSizes" />

@@ -25,6 +25,13 @@
 
     <SwitchPreferenceCompat
         app:widgetLayout="@layout/preference_widget_material_switch"
+        app:defaultValue="true"
+        app:iconSpaceReserved="false"
+        app:key="show_camera_buttons"
+        app:title="@string/settings_show_camera_buttons" />
+
+    <SwitchPreferenceCompat
+        app:widgetLayout="@layout/preference_widget_material_switch"
         app:defaultValue="false"
         app:iconSpaceReserved="false"
         app:key="dpad_turbo"

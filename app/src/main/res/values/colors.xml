@@ -18,6 +18,12 @@
     <color name="gbcKiwi">#B8FF2C</color>
     <color name="gbcDandelion">#FEC107</color>
     <color name="gbcTeal">#004F50</color>
+    <color name="gbcAtomicPurple">#8F6BB8</color>
+    <color name="gbcGlacier">#87CEEB</color>
+    <color name="gbcRed">#C62828</color>
+    <color name="gbcBlue">#1565C0</color>
+    <color name="gbcOrange">#EF6C00</color>
+    <color name="gbcYellow">#FFFF00</color>
 
     <!-- Berry theme colors -->
     <color name="theme_berry_light_primary"> #BA005E </color>

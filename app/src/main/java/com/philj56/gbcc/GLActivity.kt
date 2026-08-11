@@ -14,10 +14,7 @@ import android.Manifest
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -32,6 +29,7 @@ import android.net.Uri
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.os.*
+import android.provider.MediaStore
 import android.util.AttributeSet
 import android.util.Log
 import android.util.Property
@@ -41,8 +39,11 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.camera.core.CameraInfo
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -170,6 +171,10 @@ class GLActivity : BaseActivity(), SensorEventListener {
     private val transitionToGameboy = AnimatorSet()
     private lateinit var printerScrollAnimation : ObjectAnimator
     private var currentScreen = Screen.GAMEBOY
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var imageCapture: ImageCapture? = null
+    private var currentCameraIndex = 0
+    private var firstCameraLoad = true
 
     private lateinit var binding: ActivityGlBinding
 
@@ -389,6 +394,12 @@ class GLActivity : BaseActivity(), SensorEventListener {
                 "Grape" -> R.color.gbcGrape
                 "Kiwi" -> R.color.gbcKiwi
                 "Teal" -> R.color.gbcTeal
+                "Atomic Purple" -> R.color.gbcAtomicPurple
+                "Glacier" -> R.color.gbcGlacier
+                "Red" -> R.color.gbcRed
+                "Blue" -> R.color.gbcBlue
+                "Orange" -> R.color.gbcOrange
+                "Yellow" -> R.color.gbcYellow
                 else -> R.color.gbcTeal
             }
             false -> when (prefs.getString("dmg_color", "Light")) {
@@ -401,6 +412,44 @@ class GLActivity : BaseActivity(), SensorEventListener {
 
         binding.screen.setOnClickListener { toggleMenu() }
         binding.turboToggle.setOnClickListener { toggleTurbo() }
+        binding.buttonCameraSwitch.setOnClickListener {
+            hapticVibrate(it, true)
+            val provider = cameraProvider ?: return@setOnClickListener
+            val cameras = provider.availableCameraInfos
+            if (cameras.isNotEmpty()) {
+                currentCameraIndex = (currentCameraIndex + 1) % cameras.size
+                bindCameraUseCases()
+            }
+        }
+
+        binding.buttonAPhoto.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    hapticVibrate(v, true)
+                    press(BUTTON_CODE_A, true)
+                    v.isPressed = true
+                    takePhoto()
+                }
+                MotionEvent.ACTION_UP -> {
+                    hapticVibrate(v, false)
+                    press(BUTTON_CODE_A, false)
+                    v.isPressed = false
+                    v.performClick()
+                }
+            }
+            true
+        }
+
+        if (gbc) {
+            val color = prefs.getString("color", "Teal")
+            if (color == "Red" || color == "Berry") {
+                binding.buttonAPhoto.setImageResource(R.drawable.ic_button_a_photo_blue_selector)
+            } else {
+                binding.buttonAPhoto.setImageResource(R.drawable.ic_button_a_photo_selector)
+            }
+        } else {
+            binding.buttonAPhoto.setImageResource(R.drawable.ic_button_a_photo_selector)
+        }
 
         if (!gbc) {
             val screenBorderColor: Int
@@ -412,11 +461,11 @@ class GLActivity : BaseActivity(), SensorEventListener {
                     PorterDuff.Mode.SRC_IN
                 )
 
-                binding.buttonA.setImageResource(R.drawable.ic_button_ab_dmg_dark_selector)
-                binding.buttonB.setImageResource(R.drawable.ic_button_ab_dmg_dark_selector)
+                binding.buttonA.setImageResource(R.drawable.ic_button_a_dmg_dark_selector)
+                binding.buttonB.setImageResource(R.drawable.ic_button_b_dmg_dark_selector)
 
-                binding.buttonStart.setImageResource(R.drawable.ic_button_startselect_dmg_dark_selector)
-                binding.buttonSelect.setImageResource(R.drawable.ic_button_startselect_dmg_dark_selector)
+                binding.buttonStart.setImageResource(R.drawable.ic_button_start_dmg_dark_selector)
+                binding.buttonSelect.setImageResource(R.drawable.ic_button_select_dmg_dark_selector)
 
                 binding.turboToggle.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.dmgDarkToggleThumb))
                 binding.turboToggle.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.dmgDarkToggleTrack))
@@ -460,37 +509,68 @@ class GLActivity : BaseActivity(), SensorEventListener {
                     height = width
                 }
             }
+        } else {
+            binding.buttonA.setImageResource(R.drawable.ic_button_a_selector)
+            binding.buttonB.setImageResource(R.drawable.ic_button_b_selector)
+            binding.buttonStart.setImageResource(R.drawable.ic_button_start_selector)
+            binding.buttonSelect.setImageResource(R.drawable.ic_button_select_selector)
         }
 
         binding.buttonA.scaleX = prefs.getFloat(getString(R.string.a_scale_key), 1f)
         binding.buttonA.scaleY = binding.buttonA.scaleX
+        binding.labelA.scaleX = binding.buttonA.scaleX
+        binding.labelA.scaleY = binding.buttonA.scaleY
         binding.buttonB.scaleX = prefs.getFloat(getString(R.string.b_scale_key), 1f)
         binding.buttonB.scaleY = binding.buttonB.scaleX
+        binding.labelB.scaleX = binding.buttonB.scaleX
+        binding.labelB.scaleY = binding.buttonB.scaleY
         binding.buttonStart.scaleX = prefs.getFloat(getString(R.string.start_scale_key), 1f)
         binding.buttonStart.scaleY = binding.buttonStart.scaleX
+        binding.labelStart.scaleX = binding.buttonStart.scaleX
+        binding.labelStart.scaleY = binding.buttonStart.scaleY
         binding.buttonSelect.scaleX = prefs.getFloat(getString(R.string.select_scale_key), 1f)
         binding.buttonSelect.scaleY = binding.buttonSelect.scaleX
+        binding.labelSelect.scaleX = binding.buttonSelect.scaleX
+        binding.labelSelect.scaleY = binding.buttonSelect.scaleY
         binding.dpad.root.scaleX = prefs.getFloat(getString(R.string.dpad_scale_key), 1f)
         binding.dpad.root.scaleY = binding.dpad.root.scaleX
         binding.turboToggle.scaleX = prefs.getFloat(getString(R.string.turbo_scale_key), 1f)
         binding.turboToggle.scaleY = binding.turboToggle.scaleX
+        binding.buttonCameraSwitch.scaleX = prefs.getFloat(getString(R.string.camera_switch_scale_key), 1f)
+        binding.buttonCameraSwitch.scaleY = binding.buttonCameraSwitch.scaleX
+        binding.buttonAPhoto.scaleX = prefs.getFloat(getString(R.string.a_photo_scale_key), 1f)
+        binding.buttonAPhoto.scaleY = binding.buttonAPhoto.scaleX
 
         binding.buttonA.translationX = prefs.getFloat(getString(R.string.a_offset_x_key), 0f)
         binding.buttonA.translationY = prefs.getFloat(getString(R.string.a_offset_y_key), 0f)
+        binding.labelA.translationX = binding.buttonA.translationX
+        binding.labelA.translationY = binding.buttonA.translationY
         binding.buttonB.translationX = prefs.getFloat(getString(R.string.b_offset_x_key), 0f)
         binding.buttonB.translationY = prefs.getFloat(getString(R.string.b_offset_y_key), 0f)
+        binding.labelB.translationX = binding.buttonB.translationX
+        binding.labelB.translationY = binding.buttonB.translationY
         binding.buttonStart.translationX = prefs.getFloat(getString(R.string.start_offset_x_key), 0f)
         binding.buttonStart.translationY = prefs.getFloat(getString(R.string.start_offset_y_key), 0f)
+        binding.labelStart.translationX = binding.buttonStart.translationX
+        binding.labelStart.translationY = binding.buttonStart.translationY
         binding.buttonSelect.translationX = prefs.getFloat(getString(R.string.select_offset_x_key), 0f)
         binding.buttonSelect.translationY = prefs.getFloat(getString(R.string.select_offset_y_key), 0f)
+        binding.labelSelect.translationX = binding.buttonSelect.translationX
+        binding.labelSelect.translationY = binding.buttonSelect.translationY
         binding.dpad.root.translationX = prefs.getFloat(getString(R.string.dpad_offset_x_key), 0f)
         binding.dpad.root.translationY = prefs.getFloat(getString(R.string.dpad_offset_y_key), 0f)
         binding.turboToggle.translationX = prefs.getFloat(getString(R.string.turbo_offset_x_key), 0f)
         binding.turboToggle.translationY = prefs.getFloat(getString(R.string.turbo_offset_y_key), 0f)
+        binding.buttonCameraSwitch.translationX = prefs.getFloat(getString(R.string.camera_switch_offset_x_key), 0f)
+        binding.buttonCameraSwitch.translationY = prefs.getFloat(getString(R.string.camera_switch_offset_y_key), 0f)
+        binding.buttonAPhoto.translationX = prefs.getFloat(getString(R.string.a_photo_offset_x_key), 0f)
+        binding.buttonAPhoto.translationY = prefs.getFloat(getString(R.string.a_photo_offset_y_key), 0f)
 
         if (!prefs.getBoolean("show_turbo", false)) {
             binding.turboToggle.visibility = View.GONE
         }
+
+        updateCameraButtonsVisibility()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -796,17 +876,26 @@ class GLActivity : BaseActivity(), SensorEventListener {
             resumePrinting = false
         }
         reboot = false
+        updateCameraButtonsVisibility()
+        if (isCamera() && checkCameraPermission()) {
+            startCamera()
+        } else if (isCamera() && !cameraPermissionRefused) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.CAMERA), REQUEST_CODE_PERMISSIONS
+            )
+        }
         if (hasAccelerometer()) {
             sensorManager.registerListener(this, accelerometer, 10000)
         }
-        if (isCamera()) {
-            if (checkCameraPermission()) {
-                startCamera()
-            } else if (!cameraPermissionRefused) {
-                ActivityCompat.requestPermissions(
-                    this, arrayOf(Manifest.permission.CAMERA), REQUEST_CODE_PERMISSIONS
-                )
-            }
+    }
+
+    private fun updateCameraButtonsVisibility() {
+        if (isCamera() && prefs.getBoolean("show_camera_buttons", true)) {
+            binding.buttonCameraSwitch.visibility = View.VISIBLE
+            binding.buttonAPhoto.visibility = View.VISIBLE
+        } else {
+            binding.buttonCameraSwitch.visibility = View.GONE
+            binding.buttonAPhoto.visibility = View.GONE
         }
     }
 
@@ -880,6 +969,40 @@ class GLActivity : BaseActivity(), SensorEventListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    private fun takePhoto() {
+        val imageCapture = imageCapture ?: return
+
+        val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
+            .format(System.currentTimeMillis())
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/GBCC")
+            }
+        }
+
+        val outputOptions = ImageCapture.OutputFileOptions
+            .Builder(contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            .build()
+
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onError(exc: ImageCaptureException) {
+                    Log.e("GBCC", "Photo capture failed: ${exc.message}", exc)
+                }
+
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    val msg = "Photo capture succeeded: ${output.savedUri}"
+                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                    Log.d("GBCC", msg)
+                }
+            }
+        )
+    }
+
     private fun checkCameraPermission() : Boolean {
         val permissionStatus = ContextCompat.checkSelfPermission(
             baseContext,
@@ -907,51 +1030,76 @@ class GLActivity : BaseActivity(), SensorEventListener {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-
-            // I assume that 320x240 is available on every camera out there
-            // Though if it fails, the camera will still work
-            val targetResolution =
-                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    Size(320, 240)
-                } else {
-                    Size(240, 320)
-                }
-
-            val imageAnalysis = ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .setTargetResolution(targetResolution)
-                .build()
-
-            imageAnalysis.setAnalyzer(executor) { image ->
-                // Images are always in YUV_420_888 format, with Y as plane 0
-                // with a pixel stride of 1, so we can just grab the greyscale from here
-                val yplane = image.planes[0]
-                updateCamera(
-                    yplane.buffer,
-                    image.width,
-                    image.height,
-                    image.imageInfo.rotationDegrees,
-                    yplane.rowStride
-                )
-                image.close()
-            }
-
-            val cameraSelector = when (prefs.getString("camera", "back")) {
-                "front" -> CameraSelector.DEFAULT_FRONT_CAMERA
-                else -> CameraSelector.DEFAULT_BACK_CAMERA
-            }
-
-            try {
-                cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis)
-            } catch (e: IllegalArgumentException) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.message_failed_camera, e.message),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            cameraProvider = cameraProviderFuture.get()
+            bindCameraUseCases()
         }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun bindCameraUseCases() {
+        val provider = cameraProvider ?: return
+        provider.unbindAll()
+
+        val cameras = provider.availableCameraInfos
+        if (cameras.isEmpty()) return
+
+        if (firstCameraLoad) {
+            val pref = prefs.getString("camera", "back")
+            val lensFacing = if (pref == "front") CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
+            currentCameraIndex = cameras.indexOfFirst { info ->
+                try {
+                    val selector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+                    selector.filter(listOf(info)).isNotEmpty()
+                } catch (e: Exception) {
+                    false
+                }
+            }.takeIf { it != -1 } ?: 0
+            firstCameraLoad = false
+        }
+
+        val cameraInfo = cameras[currentCameraIndex % cameras.size]
+        val cameraSelector = cameraInfo.cameraSelector
+
+        // I assume that 320x240 is available on every camera out there
+        // Though if it fails, the camera will still work
+        val targetResolution =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                Size(320, 240)
+            } else {
+                Size(240, 320)
+            }
+
+        val imageAnalysis = ImageAnalysis.Builder()
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .setTargetResolution(targetResolution)
+            .build()
+
+        imageAnalysis.setAnalyzer(executor) { image ->
+            // Images are always in YUV_420_888 format, with Y as plane 0
+            // with a pixel stride of 1, so we can just grab the greyscale from here
+            val yplane = image.planes[0]
+            updateCamera(
+                yplane.buffer,
+                image.width,
+                image.height,
+                image.imageInfo.rotationDegrees,
+                yplane.rowStride
+            )
+            image.close()
+        }
+
+        imageCapture = ImageCapture.Builder()
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            .build()
+
+        try {
+            provider.bindToLifecycle(this, cameraSelector, imageAnalysis, imageCapture)
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                getString(R.string.message_failed_camera, e.message),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -1287,8 +1435,11 @@ class GLActivity : BaseActivity(), SensorEventListener {
                     if (it.isEmpty()) {
                         return@Thread
                     }
+                    val cropTop = 16
+                    val cropBottom = 48
                     val width = 160
-                    val height = it.size / 160
+                    val fullHeight = it.size / 160
+                    val height = (fullHeight - cropTop - cropBottom).coerceAtLeast(1)
                     val bitmap = Bitmap.createBitmap(
                         width,
                         height,
@@ -1298,8 +1449,13 @@ class GLActivity : BaseActivity(), SensorEventListener {
                     // and set each pixel manually.
                     for (x in 0 until width) {
                         for (y in 0 until height) {
-                            val px = 255 - it[y * width + x].toUByte().toInt()
-                            bitmap.setPixel(x, y, Color.argb(255, px, px, px))
+                            val pixelIndex = (y + cropTop) * width + x
+                            if (pixelIndex < it.size) {
+                                val px = 255 - it[pixelIndex].toUByte().toInt()
+                                bitmap.setPixel(x, y, Color.argb(255, px, px, px))
+                            } else {
+                                bitmap.setPixel(x, y, Color.WHITE)
+                            }
                         }
                     }
                     contentResolver.openOutputStream(uri).use { stream ->

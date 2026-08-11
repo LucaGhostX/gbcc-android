@@ -62,6 +62,12 @@
         <item>@string/settings_color_grape</item>
         <item>@string/settings_color_kiwi</item>
         <item>@string/settings_color_teal</item>
+        <item>@string/settings_color_atomic_purple</item>
+        <item>@string/settings_color_glacier</item>
+        <item>@string/settings_color_red</item>
+        <item>@string/settings_color_blue</item>
+        <item>@string/settings_color_orange</item>
+        <item>@string/settings_color_yellow</item>
     </string-array>
 
     <string-array name="color_values_array">
@@ -70,6 +76,12 @@
         <item>Grape</item>
         <item>Kiwi</item>
         <item>Teal</item>
+        <item>Atomic Purple</item>
+        <item>Glacier</item>
+        <item>Red</item>
+        <item>Blue</item>
+        <item>Orange</item>
+        <item>Yellow</item>
     </string-array>
 
 

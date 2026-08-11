@@ -45,6 +45,12 @@ class ArrangeActivity : BaseActivity() {
                 "Grape" -> R.color.gbcGrape
                 "Kiwi" -> R.color.gbcKiwi
                 "Teal" -> R.color.gbcTeal
+                "Atomic Purple" -> R.color.gbcAtomicPurple
+                "Glacier" -> R.color.gbcGlacier
+                "Red" -> R.color.gbcRed
+                "Blue" -> R.color.gbcBlue
+                "Orange" -> R.color.gbcOrange
+                "Yellow" -> R.color.gbcYellow
                 else -> R.color.gbcTeal
             }
             false -> when (prefs.getString("dmg_color", "Light")) {
@@ -61,6 +67,7 @@ class ArrangeActivity : BaseActivity() {
         binding.sliders.abSlider.addOnChangeListener { slider, value, fromUser -> onValueChange(slider, value, fromUser) }
         binding.sliders.startSelectSlider.addOnChangeListener { slider, value, fromUser -> onValueChange(slider, value, fromUser) }
         binding.sliders.dpadSlider.addOnChangeListener { slider, value, fromUser -> onValueChange(slider, value, fromUser) }
+        binding.sliders.cameraSlider.addOnChangeListener { slider, value, fromUser -> onValueChange(slider, value, fromUser) }
 
         if (!gbc) {
             val screenBorderColor: Int
@@ -72,21 +79,21 @@ class ArrangeActivity : BaseActivity() {
                     android.graphics.PorterDuff.Mode.SRC_IN
                 )
 
-                binding.buttonA.setImageResource(R.drawable.ic_button_ab_dmg_dark_selector)
-                binding.buttonB.setImageResource(R.drawable.ic_button_ab_dmg_dark_selector)
+                binding.buttonA.setImageResource(R.drawable.ic_button_a_dmg_dark_selector)
+                binding.buttonB.setImageResource(R.drawable.ic_button_b_dmg_dark_selector)
 
-                binding.buttonStart.setImageResource(R.drawable.ic_button_startselect_dmg_dark_selector)
-                binding.buttonSelect.setImageResource(R.drawable.ic_button_startselect_dmg_dark_selector)
+                binding.buttonStart.setImageResource(R.drawable.ic_button_start_dmg_dark_selector)
+                binding.buttonSelect.setImageResource(R.drawable.ic_button_select_dmg_dark_selector)
 
                 binding.turboToggleLayout.turboToggle.thumbTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.dmgDarkToggleThumb))
                 binding.turboToggleLayout.turboToggle.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.dmgDarkToggleTrack))
             } else {
                 screenBorderColor = ContextCompat.getColor(this, R.color.dmgLightScreenBorder)
-                binding.buttonA.setImageResource(R.drawable.ic_button_ab_dmg_selector)
-                binding.buttonB.setImageResource(R.drawable.ic_button_ab_dmg_selector)
+                binding.buttonA.setImageResource(R.drawable.ic_button_a_dmg_selector)
+                binding.buttonB.setImageResource(R.drawable.ic_button_b_dmg_selector)
 
-                binding.buttonStart.setImageResource(R.drawable.ic_button_startselect_dmg_selector)
-                binding.buttonSelect.setImageResource(R.drawable.ic_button_startselect_dmg_selector)
+                binding.buttonStart.setImageResource(R.drawable.ic_button_start_dmg_selector)
+                binding.buttonSelect.setImageResource(R.drawable.ic_button_select_dmg_selector)
             }
 
             binding.buttonStart.rotation = -45f
@@ -119,23 +126,66 @@ class ArrangeActivity : BaseActivity() {
                     height = width
                 }
             }
+        } else {
+            binding.buttonA.setImageResource(R.drawable.ic_button_ab_selector)
+            binding.buttonB.setImageResource(R.drawable.ic_button_ab_selector)
+            binding.buttonStart.setImageResource(R.drawable.ic_button_startselect_selector)
+            binding.buttonSelect.setImageResource(R.drawable.ic_button_startselect_selector)
         }
 
         binding.buttonA.translationX = prefs.getFloat(getString(R.string.a_offset_x_key), 0f)
         binding.buttonA.translationY = prefs.getFloat(getString(R.string.a_offset_y_key), 0f)
+        binding.labelA.translationX = binding.buttonA.translationX
+        binding.labelA.translationY = binding.buttonA.translationY
         binding.buttonB.translationX = prefs.getFloat(getString(R.string.b_offset_x_key), 0f)
         binding.buttonB.translationY = prefs.getFloat(getString(R.string.b_offset_y_key), 0f)
+        binding.labelB.translationX = binding.buttonB.translationX
+        binding.labelB.translationY = binding.buttonB.translationY
         binding.buttonStart.translationX = prefs.getFloat(getString(R.string.start_offset_x_key), 0f)
         binding.buttonStart.translationY = prefs.getFloat(getString(R.string.start_offset_y_key), 0f)
+        binding.labelStart.translationX = binding.buttonStart.translationX
+        binding.labelStart.translationY = binding.buttonStart.translationY
         binding.buttonSelect.translationX = prefs.getFloat(getString(R.string.select_offset_x_key), 0f)
         binding.buttonSelect.translationY = prefs.getFloat(getString(R.string.select_offset_y_key), 0f)
+        binding.labelSelect.translationX = binding.buttonSelect.translationX
+        binding.labelSelect.translationY = binding.buttonSelect.translationY
         binding.dpad.root.translationX = prefs.getFloat(getString(R.string.dpad_offset_x_key), 0f)
         binding.dpad.root.translationY = prefs.getFloat(getString(R.string.dpad_offset_y_key), 0f)
         binding.turboToggleLayout.root.translationX = prefs.getFloat(getString(R.string.turbo_offset_x_key), 0f)
         binding.turboToggleLayout.root.translationY = prefs.getFloat(getString(R.string.turbo_offset_y_key), 0f)
+        binding.buttonCameraSwitch.translationX = prefs.getFloat(getString(R.string.camera_switch_offset_x_key), 0f)
+        binding.buttonCameraSwitch.translationY = prefs.getFloat(getString(R.string.camera_switch_offset_y_key), 0f)
+        binding.buttonAPhoto.translationX = prefs.getFloat(getString(R.string.a_photo_offset_x_key), 0f)
+        binding.buttonAPhoto.translationY = prefs.getFloat(getString(R.string.a_photo_offset_y_key), 0f)
+
+        binding.buttonCameraSwitch.scaleX = prefs.getFloat(getString(R.string.camera_switch_scale_key), 1f)
+        binding.buttonCameraSwitch.scaleY = binding.buttonCameraSwitch.scaleX
+        binding.buttonAPhoto.scaleX = prefs.getFloat(getString(R.string.a_photo_scale_key), 1f)
+        binding.buttonAPhoto.scaleY = binding.buttonAPhoto.scaleX
+
+        binding.labelA.scaleX = binding.buttonA.scaleX
+        binding.labelA.scaleY = binding.buttonA.scaleY
+        binding.labelB.scaleX = binding.buttonB.scaleX
+        binding.labelB.scaleY = binding.buttonB.scaleY
+        binding.labelStart.scaleX = binding.buttonStart.scaleX
+        binding.labelStart.scaleY = binding.buttonStart.scaleY
+        binding.labelSelect.scaleX = binding.buttonSelect.scaleX
+        binding.labelSelect.scaleY = binding.buttonSelect.scaleY
 
         if (!prefs.getBoolean("show_turbo", false)) {
             binding.turboToggleLayout.turboToggle.visibility = View.GONE
+        }
+
+        if (!prefs.getBoolean("show_camera_buttons", true)) {
+            binding.buttonCameraSwitch.visibility = View.GONE
+            binding.buttonAPhoto.visibility = View.GONE
+        } else {
+            val color = prefs.getString("color", "Teal")
+            if (color == "Red" || color == "Berry") {
+                binding.buttonAPhoto.setImageResource(R.drawable.ic_button_a_photo_blue_selector)
+            } else {
+                binding.buttonAPhoto.setImageResource(R.drawable.ic_button_a_photo_selector)
+            }
         }
     }
 
@@ -175,6 +225,10 @@ class ArrangeActivity : BaseActivity() {
             binding.dpad.root.gridBase = gridBase
             binding.turboToggleLayout.root.gridSize = gridSize
             binding.turboToggleLayout.root.gridBase = gridBase
+            binding.buttonCameraSwitch.gridSize = gridSize
+            binding.buttonCameraSwitch.gridBase = gridBase
+            binding.buttonAPhoto.gridSize = gridSize
+            binding.buttonAPhoto.gridBase = gridBase
         }
 
         binding.placeholderTouchTarget.setOnTouchListener { v, _ ->
@@ -201,6 +255,7 @@ class ArrangeActivity : BaseActivity() {
         binding.sliders.abSlider.value = sizeToValue(prefs.getFloat(getString(R.string.a_scale_key), 1f))
         binding.sliders.startSelectSlider.value = sizeToValue(prefs.getFloat(getString(R.string.start_scale_key), 1f))
         binding.sliders.dpadSlider.value = sizeToValue(prefs.getFloat(getString(R.string.dpad_scale_key), 1f))
+        binding.sliders.cameraSlider.value = sizeToValue(prefs.getFloat(getString(R.string.camera_switch_scale_key), 1f))
     }
 
     override fun onPause() {
@@ -211,6 +266,8 @@ class ArrangeActivity : BaseActivity() {
             putFloat(getString(R.string.select_scale_key), binding.buttonSelect.scaleX)
             putFloat(getString(R.string.dpad_scale_key), binding.dpad.root.scaleX)
             putFloat(getString(R.string.turbo_scale_key), binding.turboToggleLayout.root.scaleX)
+            putFloat(getString(R.string.camera_switch_scale_key), binding.buttonCameraSwitch.scaleX)
+            putFloat(getString(R.string.a_photo_scale_key), binding.buttonAPhoto.scaleX)
 
             putFloat(getString(R.string.a_offset_x_key), binding.buttonA.translationX)
             putFloat(getString(R.string.a_offset_y_key), binding.buttonA.translationY)
@@ -224,6 +281,10 @@ class ArrangeActivity : BaseActivity() {
             putFloat(getString(R.string.dpad_offset_y_key), binding.dpad.root.translationY)
             putFloat(getString(R.string.turbo_offset_x_key), binding.turboToggleLayout.root.translationX)
             putFloat(getString(R.string.turbo_offset_y_key), binding.turboToggleLayout.root.translationY)
+            putFloat(getString(R.string.camera_switch_offset_x_key), binding.buttonCameraSwitch.translationX)
+            putFloat(getString(R.string.camera_switch_offset_y_key), binding.buttonCameraSwitch.translationY)
+            putFloat(getString(R.string.a_photo_offset_x_key), binding.buttonAPhoto.translationX)
+            putFloat(getString(R.string.a_photo_offset_y_key), binding.buttonAPhoto.translationY)
             apply()
         }
         super.onPause()
@@ -233,8 +294,13 @@ class ArrangeActivity : BaseActivity() {
         binding.sliders.abSlider.value = 0.5F
         binding.sliders.startSelectSlider.value = 0.5F
         binding.sliders.dpadSlider.value = 0.5F
+        binding.sliders.cameraSlider.value = 0.5F
         binding.turboToggleLayout.root.scaleX = 1f
         binding.turboToggleLayout.root.scaleY = 1f
+        binding.buttonCameraSwitch.scaleX = 1f
+        binding.buttonCameraSwitch.scaleY = 1f
+        binding.buttonAPhoto.scaleX = 1f
+        binding.buttonAPhoto.scaleY = 1f
     }
 
     private fun resetLayout() {
@@ -250,6 +316,10 @@ class ArrangeActivity : BaseActivity() {
         binding.dpad.root.translationY = 0f
         binding.turboToggleLayout.root.translationX = 0f
         binding.turboToggleLayout.root.translationY = 0f
+        binding.buttonCameraSwitch.translationX = 0f
+        binding.buttonCameraSwitch.translationY = 0f
+        binding.buttonAPhoto.translationX = 0f
+        binding.buttonAPhoto.translationY = 0f
     }
 
     private fun valueToSize(value: Float) : Float {
@@ -269,20 +339,35 @@ class ArrangeActivity : BaseActivity() {
             R.id.abSlider -> {
                 binding.buttonA.scaleX = scale
                 binding.buttonA.scaleY = scale
+                binding.labelA.scaleX = scale
+                binding.labelA.scaleY = scale
                 binding.buttonB.scaleX = scale
                 binding.buttonB.scaleY = scale
+                binding.labelB.scaleX = scale
+                binding.labelB.scaleY = scale
             }
 
             R.id.startSelectSlider -> {
                 binding.buttonStart.scaleX = scale
                 binding.buttonStart.scaleY = scale
+                binding.labelStart.scaleX = scale
+                binding.labelStart.scaleY = scale
                 binding.buttonSelect.scaleX = scale
                 binding.buttonSelect.scaleY = scale
+                binding.labelSelect.scaleX = scale
+                binding.labelSelect.scaleY = scale
             }
 
             R.id.dpadSlider -> {
                 binding.dpad.root.scaleX = scale
                 binding.dpad.root.scaleY = scale
+            }
+
+            R.id.cameraSlider -> {
+                binding.buttonCameraSwitch.scaleX = scale
+                binding.buttonCameraSwitch.scaleY = scale
+                binding.buttonAPhoto.scaleX = scale
+                binding.buttonAPhoto.scaleY = scale
             }
         }
     }

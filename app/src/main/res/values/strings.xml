@@ -46,6 +46,8 @@
     <string name="select_button_description">Select</string>
     <string name="printer_button_description">Printer</string>
     <string name="gameboy_button_description">Game Boy</string>
+    <string name="camera_switch_description">Switch camera</string>
+    <string name="a_photo_button_description">A + Photo</string>
     <string name="printer_save_button_description">Save printer output</string>
     <string name="printer_clear_button_description">Clear printer output</string>
 
@@ -99,6 +101,7 @@
     <string name="settings_turbo_dpad_summary">Double-tap the center of the Dpad to toggle turbo</string>
     <string name="settings_turbo_speed">Turbo limit</string>
     <string name="settings_turbo_toggle">Show turbo toggle</string>
+    <string name="settings_show_camera_buttons">Show camera buttons</string>
     <string name="settings_vsync">Vsync</string>
     <string name="settings_vsync_summary">Try to sync emulator speed to video refresh rate rather than audio</string>
 
@@ -133,6 +136,12 @@
     <string name="settings_color_grape">Grape</string>
     <string name="settings_color_kiwi">Kiwi</string>
     <string name="settings_color_teal">Teal</string>
+    <string name="settings_color_atomic_purple">Atomic Purple</string>
+    <string name="settings_color_glacier">Glacier</string>
+    <string name="settings_color_red">Red</string>
+    <string name="settings_color_blue">Blue</string>
+    <string name="settings_color_orange">Orange</string>
+    <string name="settings_color_yellow">Yellow</string>
 
     <string name="settings_audio_volume">Volume</string>
     <string name="settings_audio_printer_volume">Printer volume</string>
@@ -184,6 +193,7 @@
     <string name="a_b_size">A &amp; B</string>
     <string name="start_select_size">Start &amp; Select</string>
     <string name="dpad_size">Dpad</string>
+    <string name="camera_size">Camera buttons</string>
     <string name="reset_sizes">Reset sizes</string>
     <string name="reset_layout">Reset layout</string>
 

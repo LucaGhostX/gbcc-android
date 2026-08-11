@@ -13,6 +13,10 @@
     <string name="dpad_offset_y_key">dpadOffsetY</string>
     <string name="turbo_offset_x_key">buttonTurboOffsetX</string>
     <string name="turbo_offset_y_key">buttonTurboOffsetY</string>
+    <string name="camera_switch_offset_x_key">buttonCameraSwitchOffsetX</string>
+    <string name="camera_switch_offset_y_key">buttonCameraSwitchOffsetY</string>
+    <string name="a_photo_offset_x_key">buttonAPhotoOffsetX</string>
+    <string name="a_photo_offset_y_key">buttonAPhotoOffsetY</string>
 
     <!-- Button scales -->
     <string name="a_scale_key">buttonAScale</string>
@@ -21,6 +25,8 @@
     <string name="select_scale_key">buttonSelectScale</string>
     <string name="dpad_scale_key">dpadScale</string>
     <string name="turbo_scale_key">buttonTurboScale</string>
+    <string name="camera_switch_scale_key">buttonCameraSwitchScale</string>
+    <string name="a_photo_scale_key">buttonAPhotoScale</string>
 
     <!-- Additional button mappings -->
     <string name="additional_map_a_key">additionalMapA</string>
