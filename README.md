@@ -16,7 +16,7 @@ This fork includes several improvements and new features implemented via AI assi
 - **Automatic Cropping**: Images exported via the Printer function are now automatically cropped (16 pixels at the top and 48 pixels at the bottom) to eliminate unwanted margins.
 
 ### Interface and Customization
-- **New GBC Colors**: Added new shell color options for the Game Boy Color, including Atomic Purple, Glacier, Red, Blue, Orange, and an ultra-vibrant Yellow.
+- **New GBC Colors**: Added new shell color options for the Game Boy Color, including Atomic Purple, Glacier, Red, Blue, Orange, and an Yellow.
 - **Enhanced Touch Controls**:
     - Real text overlays (TextView) on A, B, START, and SELECT buttons using the `sans-serif-black` system font for maximum sharpness.
     - Full integration of the new Camera buttons into the "Rearrange layout" feature, with drag-and-drop support and resizing via a dedicated slider.
