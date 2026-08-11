@@ -1,5 +1,5 @@
 > [!CAUTION]
-> **Disclaimer**: These modifications were made for my own personal use. Since this fork was **"vibe-coded"** with AI assistance, I have no precise idea of the actual quality or reliability of the work. I take neither credit nor responsibility for the original work or for the modifications made, and they are provided **strictly as-is**. Accordingly, **no support will be provided**.
+> **Disclaimer**: These modifications were made for my own personal use, specifically focusing on the **Game Boy Camera** and **Game Boy Printer** emulation functions. Since this fork was **"vibe-coded"** with AI assistance, I have no precise idea of the actual quality or reliability of the work. I take neither credit nor responsibility for the original work or for the modifications made, and they are provided **strictly as-is**. Accordingly, **no support will be provided**.
 
 ---
 
@@ -12,7 +12,7 @@ details.
 ---
 
 ## Fork New Features (Vide-coded)
-This fork includes several improvements and new features implemented via AI assistance (vide-coded):
+This fork includes several improvements and new features implemented via AI assistance (vide-coded), specifically tailored for use with the **Game Boy Camera** and **Game Boy Printer** emulation functions:
 
 ### Camera and Sensors
 - **CameraX Integration**: Full migration and implementation of CameraX APIs for modern and performant camera management.
