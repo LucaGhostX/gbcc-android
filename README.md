@@ -1,3 +1,8 @@
+> [!CAUTION]
+> **Disclaimer**: These modifications were made for my own personal use. Since this fork was **"vibe-coded"** with AI assistance, I have no precise idea of the actual quality or reliability of the work. I take neither credit nor responsibility for the original work or for the modifications made, and they are provided **strictly as-is**. Accordingly, **no support will be provided**.
+
+---
+
 # [GBCC Android](https://gbcc.github.io)
 This is the android front-end to [GBCC](https://gbcc.github.io), a
 cross-platform Game Boy and Game Boy Color emulator written in C with a focus
@@ -45,8 +50,3 @@ This will generate the apks in `app/build/outputs/apk/`.
 ~~Debug packages are generated on each commit. To download them, navigate to the
 actions tab (you'll need to be logged in to GitHub to do this). Select the latest "Build Packages" job that
 succeeded, and look for the artifacts dropdown.~~
-
----
-
-> [!CAUTION]
-> **Disclaimer**: These modifications were made for my own personal use. Since this fork was **"vibe-coded"** with AI assistance, I have no precise idea of the actual quality or reliability of the work. I take neither credit nor responsibility for the original work or for the modifications made, and they are provided **strictly as-is**. Accordingly, **no support will be provided**.
